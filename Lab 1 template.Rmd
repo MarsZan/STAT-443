@@ -46,6 +46,7 @@ plot(x,
      ylab = "Lake Depth Level", 
      main = "Lake Depth Level by Time")
 ```
+
 i) In this new plot, we can clearly see the change in lake's depth level according according to time, whereas in the first plot this is not easy to see. 
 
 ii) We observe seasonality from the above plot where the lake's depth is high in the middle of the year and becomes lower at the end of a year. 
@@ -81,6 +82,7 @@ mean(std_data < -2.0 | std_data > 2.0)
 # expected percentage of observations fall outside of +/- 2
 round(2*pnorm(2.0, lower.tail = FALSE),4)
 ```
+
 i) About 5% of the observations fall outside of the range $\pm 2$
 
 ii) Since the observations are draw from a standard normal distribution,
