@@ -1,0 +1,126 @@
+---
+title: 'STAT 443: Lab 1'
+author: 'Wenxuan Zan (61336194)'
+date: "13 January, 2022"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+#if you do not have the package, type install.packages("name_of_the_package")
+library(tidyverse)
+library(knitr)
+library(tseries)
+```
+
+### Question 1
+
+(a) 
+
+```{r, echo=TRUE}
+data <- read.csv("LakeLevels.csv", header = TRUE)
+head(data,10)
+data %>% 
+    ggplot(aes(x = Date, y = LakeLevel)) +
+    geom_point() +
+    labs(x = "Date",
+         y = "Lake Depth Level",
+         title = "Lake Depth Level By Date")
+```
+
+
+(b)
+
+```{r, echo=TRUE}
+x <- ts(data = data[,-1], start = c(2007,1), frequency = 365)
+```
+
+
+(c)
+
+```{r, echo=TRUE}
+plot(x,
+     xlab = "Time", 
+     ylab = "Lake Depth Level", 
+     main = "Lake Depth Level by Time")
+```
+i) In this new plot, we can clearly see the change in lake's depth level according according to time, whereas in the first plot this is not easy to see. 
+
+ii) We observe seasonality from the above plot where the lake's depth is high in the middle of the year and becomes lower at the end of a year. 
+
+iii) We do not observe a trend that there is no overall increase or decrease in lake's depth level year
+over year. 
+
+iv) The observations are serially dependent. 
+
+v) There is cyclical variation in the above plot, where we see the same pattern of increasing and decreasing depth year over year. 
+
+
+### Question 2
+
+(a) 
+
+```{r, echo=TRUE}
+set.seed(443)
+std_data <- rnorm(200)
+std_ts <- ts(std_data)
+max(std_data)
+```
+
+
+(b)
+
+```{r, echo=TRUE}
+plot(std_ts, 
+     ylab = "standardized z-score",
+     main = "Time series plot with standard normal data")
+# calculate percentage of observation fall outside of +/- 2
+mean(std_data < -2.0 | std_data > 2.0)
+# expected percentage of observations fall outside of +/- 2
+round(2*pnorm(2.0, lower.tail = FALSE),4)
+```
+i) About 5% of the observations fall outside of the range $\pm 2$
+
+ii) Since the observations are draw from a standard normal distribution,
+we would expect around 4.55% of the observations to fall outside of the range $\pm 2$. 
+
+(c)
+
+```{r, echo=TRUE}
+acf(std_ts, type = "correlation")
+```
+
+Looking at the above correlogram, most of the sample acf are within 
+the $\pm 2/\sqrt{200}$ bound. We do not see the acf alternates, nor there is any oscillation. All observations in the sample are equally uncorrelated, such that observations close in time are equally less correlated as observations that are farther in apart in time. 
+
+### More information on R Markdown
+
+This is an R Markdown document, which can be used as a template for STAT 443 labs and assignments. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+summary(cars)
+```
+
+Using the function *kable*, it produces a nicer table
+```{r}
+kable(summary(cars))
+```
+
+### Including Plots
+
+You can also embed plots, for example:
+
+```{r, echo=TRUE}
+plot(pressure)
+```
+
+Note that specifying `echo = FALSE` parameter would prevent printing of the R code that generated the plot. This is something you may want to do for larger reports that would not require display of the R code.
+
+You can also modify the size and alignment of the figure.
+```{r, echo=TRUE, fig.cap="title",fig.align='center',fig.height=6,fig.width=4}
+plot(pressure)
+```
