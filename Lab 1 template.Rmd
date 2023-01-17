@@ -94,8 +94,7 @@ we would expect around 4.55% of the observations to fall outside of the range $\
 acf(std_ts, type = "correlation")
 ```
 
-Looking at the above correlogram, most of the sample acf are within 
-the $\pm 2/\sqrt{200}$ bound. We do not see the acf alternates, nor there is any oscillation. All observations in the sample are equally uncorrelated, such that observations close in time are equally less correlated as observations that are farther in apart in time. 
+Looking at the above correlogram, most of the sample auto-correlations are within the $\pm 2/\sqrt{200}$ bound, so they are likely to come from a completely random series. We do not see the acf alternates, nor there is any oscillation. We do not observe any indication of positive or negative temporal correlation.  
 
 ### More information on R Markdown
 
