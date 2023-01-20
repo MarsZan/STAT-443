@@ -1,0 +1,89 @@
+---
+title: 'STAT 443: Lab 2'
+author: 'Wenxuan Zan (61336194)'
+date: "20 January, 2022"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+#if you do not have the package, type install.packages("name_of_the_package")
+library(tidyverse)
+library(knitr)
+library(tseries)
+library(zoo)
+```
+
+### Question 1
+
+a)
+
+```{r}
+temp <- read.csv("dataTempPG.csv", header = TRUE)
+annual_ts <- ts(temp[,c("Annual")],start = c(1919), frequency = 1)
+plot(annual_ts,
+     xlab = "Year",
+     ylab = "Mean Minimum Temperature",
+     main = "Yearly Mean Minimum Temperature Plot")
+
+```
+
+Looking at the above plot, it appears that there is an upward trend in the yearly mean minimum temperature over the years. 
+
+b)
+
+```{r}
+acf(annual_ts,
+    main = "ACF plot")
+```
+
+Looking at the above plot, the acf for this time series data are all positive for all values of lag. Also, the value of acf decreases as the lag increases, but the rate of decay is rather slow. There are also many values exceed the $2/\sqrt{90}$ bound which suggests to us the above time series is likely not a white noise process. 
+
+c)
+
+```{r}
+near_term <- window(annual_ts, start = c(1968), end = c(2008), frequency = 1)
+plot(near_term,
+     xlab = "Years from 1968 to 2008",
+     ylab = "Mean Minimum Temperature",
+     main = "Short Term Yearly Mean Minimum Temperature Plot")
+lines(x = rollmean(near_term, k = 5), col = "red")
+legend(1990,
+       -2,
+       legend = c("un-smoothed data","Smoothed data"), 
+       lty = c("solid","solid"),
+       col = c("black","red"))
+```
+
+### Question 2
+
+a) 
+
+```{r}
+lake <- read.csv("LakeLevels.csv", header = TRUE)
+lake_ts <- ts(lake$LakeLevel, start = c(2007,1), frequency = 365)
+acf(lake_ts,
+    main = "ACF for Lake Level Time Series Data from 2007 to 2011")
+```
+
+The acf for this time series data are all positive for all values of lag. The value of acf decay slowly. Most of the acf values exceed the $2/\sqrt{n}$ bound which suggests to us the above time series is likely not a white noise process. 
+
+b) 
+
+```{r}
+plot(decompose(lake_ts, type="additive"))
+```
+
+c) 
+
+```{r}
+plot(stl(lake_ts, s.window = "periodic"), 
+     main = "Trend and Seasonal Effect Decomposition via Loss Smoothing")
+```
+
+
+
+
+
