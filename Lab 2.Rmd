@@ -39,7 +39,7 @@ acf(annual_ts,
     main = "ACF plot")
 ```
 
-Looking at the above plot, the acf for this time series data are all positive for all values of lag. Also, the value of acf decreases as the lag increases, but the rate of decay is rather slow. There are also many values exceed the $2/\sqrt{90}$ bound which suggests to us the above time series is likely not a white noise process. 
+Looking at the above plot, the acf for this time series data are all positive for all values of lag. Also, the value of acf decreases as the lag increases, but the rate of decay is rather slow which reflects the positive trend in the time series data. There are also many values exceed the $2/\sqrt{90}$ bound which suggests to us the above time series is likely not a white noise process. 
 
 c)
 
@@ -68,7 +68,7 @@ acf(lake_ts,
     main = "ACF for Lake Level Time Series Data from 2007 to 2011")
 ```
 
-The acf for this time series data are all positive for all values of lag. The value of acf decay slowly. Most of the acf values exceed the $2/\sqrt{n}$ bound which suggests to us the above time series is likely not a white noise process. 
+The acf for this time series data are all positive for all values of lag. The value of acf decay slowly which reflects the positive trend in the time series. Most of the acf values exceed the $2/\sqrt{n}$ bound which suggests to us the above time series is likely not a white noise process. 
 
 b) 
 
