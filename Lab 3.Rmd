@@ -80,10 +80,33 @@ part a) and b) look similar, this is because the coefficient in both models are 
 a)
 
 ```{r}
-
+alpha = -0.5
+q3_sim <- arima.sim(n = 1000, list(ar = c(alpha), sd = 0.1))
+q3_sim_ts <- ts(q3_sim)
+plot(q3_sim_ts,
+     ylab = "Value of Xt",
+     main = "Q3 Time Serie Plot for Simulated Data")
+acf(q3_sim_ts)
 ```
 
+The acf values are alternating where a positive autocorrelation coefficient is followed by a negative autocorrelation coefficient, this indicates that this time series data exhibits negative temporal correlation. We also observe that the acf values decay with lag and approaches zero as lag increases. 
 
+b)
+```{r}
+par(mfrow = c(2,2))
+alpha = c(seq(from = -0.5, to = -1, by = -0.1))
+q3b_sim_ts_1 = ts(arima.sim(n = 1000, list(ar = c(alpha[1]), sd = 0.1)))
+q3b_sim_ts_4 = ts(arima.sim(n = 1000, list(ar = c(alpha[4]), sd = 0.1)))
+q3b_sim_ts_5 = ts(arima.sim(n = 1000, list(ar = c(alpha[5]), sd = 0.1)))
+q3b_sim_ts_6 = ts(arima.sim(n = 1000, list(ar = c(-0.99), sd = 0.1)))
+
+acf(q3b_sim_ts_1, main = "acf for alpha = -0.5")
+acf(q3b_sim_ts_4, main = "acf for alpha = -0.8")
+acf(q3b_sim_ts_5, main = "acf for alpha = -0.9")
+acf(q3b_sim_ts_6, main = "acf for alpha = -0.99")
+```
+
+As $alpha \rightarrow -1$, the decay of autocorrelation coefficient becomes more and more slowly. As we can see that when $alpha \rightarrow -1$, the time serie becomes less and less stationary. 
 
 
 
