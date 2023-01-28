@@ -12,9 +12,74 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(knitr)
 library(tseries)
+library(zoo)
 ```
 
+### Question 1
+
+a)
+
 ```{r, echo=TRUE}
+sim_data <- arima.sim(n = 1000, list(ma = c(-1.3,0.4), sd = sqrt(0.1)))
+sim_ts <- ts(sim_data)
+plot(sim_ts,
+     main = "Time Series Plot for Simulated Data",
+     ylab = "Simulated MA data")
+```
+
+Looking at the above time series plot, there is the presence of negative serial correlation, therefore the acf should have an alternating pattern that a positive value tends to be followed by a negative value. 
+
+b) 
+
+```{r}
+acf(sim_ts)
+```
+
+Yes, the acf plot looks as what we would expect in part a).After repeating for a few times, we can see that the acf plot is composed of alternating positive and negative autocorrelation values. 
+
+c) 
+
+```{r}
+arma_acf <- ARMAacf(ma = c(-1.3,0.4))
+plot(arma_acf)
+```
+
+d)
+
+The sample acf also shows a pattern of alternating values where one positive autocorrelation is followed by a negative autocorrelation which matches to the simulated data in b). We also see that sample acf decays with lag and at lag 4, the acf equals 0, this implies the time serie is stationary. 
+
+### Question 2
+
+a)
+
+```{r}
+q2_sim <- arima.sim(n = 1000, list(ma = c(0.25), sd = sqrt(0.4)))
+q2_sim_ts <- ts(q2_sim)
+plot(q2_sim_ts)
+acf(q2_sim_ts)
+```
+
+First of all, the sample acf decays with lag. Then we observe runs of positive and negative acfs, therefore it is likely that there is a positive temporal correlation in the simulated data. 
+
+b)
+```{r}
+q2_sim_2 <- arima.sim(n = 1000, list(ma = c(4), sd = sqrt(0.4)))
+q2_sim_ts_2 <- ts(q2_sim_2)
+plot(q2_sim_ts_2)
+acf(q2_sim_ts_2)
+```
+
+We observe the acf is decaying with lag and is approaching 0, therefore the time serie data is likely stationary. We also observe runs of positive and negative acfs, therefore it is likely that there is a positive temporal correlation in the simulated data.
+
+c)
+
+part a) and b) look similar, this is because the coefficient in both models are the inverse of each other. 
+
+### Question 3
+
+a)
+
+```{r}
 
 ```
 
