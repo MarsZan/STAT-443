@@ -106,8 +106,50 @@ acf(q3b_sim_ts_5, main = "acf for alpha = -0.9")
 acf(q3b_sim_ts_6, main = "acf for alpha = -0.99")
 ```
 
-As $alpha \rightarrow -1$, the decay of autocorrelation coefficient becomes more and more slowly. As we can see that when $alpha \rightarrow -1$, the time serie becomes less and less stationary. 
+As $alpha \rightarrow -1$, the decay of autocorrelation coefficient becomes more and more slowly. We see a stronger negative temporal correlation in the time series data. Also we can see that when $alpha \rightarrow -1$, the time series becomes non stationary. 
 
+c) 
+```{r}
+q3c_sim_ts_1 = ts(arima.sim(n = 1000, list(ar = c(-0.5), sd = 0.1)))
+q3c_sim_ts_4 = ts(arima.sim(n = 1000, list(ar = c(-0.3), sd = 0.1)))
+q3c_sim_ts_5 = ts(arima.sim(n = 1000, list(ar = c(-0.1), sd = 0.1)))
+q3c_sim_ts_6 = ts(arima.sim(n = 1000, list(ar = c(-0.01), sd = 0.1)))
 
+acf(q3c_sim_ts_1, main = "acf for alpha = -0.5")
+acf(q3c_sim_ts_4, main = "acf for alpha = -0.3")
+acf(q3c_sim_ts_5, main = "acf for alpha = -0.1")
+acf(q3c_sim_ts_6, main = "acf for alpha = -0.01")
+```
+
+As $alpha \rightarrow 0$, the decay of autocorrelation coefficient becomes more rapid. As we can see that when $alpha \rightarrow 0$, the time series becomes more stationary. 
+
+d)
+```{r}
+q3d_sim_ts_1 = ts(arima.sim(n = 1000, list(ar = c(0.5), sd = 0.1)))
+q3d_sim_ts_2 = ts(arima.sim(n = 1000, list(ar = c(0.7), sd = 0.1)))
+q3d_sim_ts_3 = ts(arima.sim(n = 1000, list(ar = c(0.9), sd = 0.1)))
+q3d_sim_ts_4 = ts(arima.sim(n = 1000, list(ar = c(0.99), sd = 0.1)))
+
+acf(q3d_sim_ts_1,lag.max = 999, main = "acf for alpha = 0.5")
+acf(q3d_sim_ts_2,lag.max = 999, main = "acf for alpha = 0.7")
+acf(q3d_sim_ts_3,lag.max = 999, main = "acf for alpha = 0.9")
+acf(q3d_sim_ts_4,lag.max = 999,  main = "acf for alpha = 0.99")
+```
+
+When $\alpha \rightarrow 1$, we observe that the decay of autocorrelation coefficients become more and more slowly. The time series data exhibit a stronger and stronger positive temporal correlation in the data. The time series become more non-stationary. 
+
+```{r}
+q3d_sim_ts_5 = ts(arima.sim(n = 1000, list(ar = c(0.5), sd = 0.1)))
+q3d_sim_ts_6 = ts(arima.sim(n = 1000, list(ar = c(0.3), sd = 0.1)))
+q3d_sim_ts_7 = ts(arima.sim(n = 1000, list(ar = c(0.1), sd = 0.1)))
+q3d_sim_ts_8 = ts(arima.sim(n = 1000, list(ar = c(0.01), sd = 0.1)))
+
+acf(q3d_sim_ts_5, main = "acf for alpha = 0.5")
+acf(q3d_sim_ts_6, main = "acf for alpha = 0.3")
+acf(q3d_sim_ts_7, main = "acf for alpha = 0.1")
+acf(q3d_sim_ts_8, main = "acf for alpha = 0.01")
+```
+
+As $alpha \rightarrow 0$ from $\alpha = 0.5$, we observe similar acfs as in part c), the decay of autocorrelation coefficient becomes more rapid. As we can see that when $alpha \rightarrow 0$, the time series becomes more stationary. 
 
 
