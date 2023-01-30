@@ -53,25 +53,62 @@ c)
 ```{r}
 # MA method
 ma_trend <- co2_train_decom$trend
+ma_seas <- co2_train_decom$seasonal
+ma_error <- co2_train_decom$random
 # Loess smoothing
 loess_trend <- co2_train_loess$time.series[,"trend"]
+loess_seas <- co2_train_loess$time.series[,"seasonal"]
+loess_error <- co2_train_loess$time.series[,"remainder"]
+# creating data frame
+lm_data <- data.frame(ma_trend = ma_trend,
+                      loess_trend = loess_trend,
+                      time = c(1:length(co2_train)))
 # Fitted Models
-lm_ma <- lm(co2_train ~ ma_trend)
-lm_loess <- lm(co2_train ~ loess_trend)
+lm_ma <- lm(ma_trend~time, data = lm_data)
+lm_loess <- lm(loess_trend~time, data = lm_data)
 summary(lm_ma)
 summary(lm_loess)
 ```
 
 i) Fitted model using MA method: 
-$$\hat{X_t} = -0.5817 + 1.0016*m_t$$
+$$\hat{m_t} = 0.03329 + 0.1488*t$$
 
 Fitted model using loess smoothing method:
-$$\hat{X_t} = 0.3878 + 0.9989*m_t$$
+$$\hat{m_t} = 0.03329 + 0.1491*t$$
 
 ii) The trend component is significant at 95% confidence level under both method. 
 
-iii) I think the trend component is a good predictor of CO2 levels for two reasons: first, as we can see from the trend component plot in part b) that the trend is linear over the entire time range of the time series data; second, from the output of the linear models we observe that $R^2 > 0.99$f ro both models. This indicates that majority of the variation within the time series is explained by the trend component. 
+iii) I think the trend component is a good predictor because the trend is linear over the entire time range of the time series data looking at the trend component plot in part b); second, from the output of the linear models we observe that $R^2 > 0.99$f ro both models. This indicates that majority of the variation within the time series is explained by the trend component. 
 
+d)
+```{r}
+t_test <- data.frame(time = max(lm_data$time) + c(1:length(co2_test)))
+ma_trend_pred <- predict(lm_ma, newdata = t_test)
+loess_trend_pred <- predict(lm_loess, newdata = t_test)
+
+# estimate seasonal effect 
+seasonals <- tibble(ma_sea_hat = ma_seas,
+                        loess_sea_hat = loess_seas,
+                        season = rep(1:12,41)) %>%
+  group_by(season) %>%
+  summarise(shat_ma = mean(ma_sea_hat),
+            shat_loess = mean(loess_sea_hat)) 
+
+
+ma_pred <- ts(ma_trend_pred + ma_seas[1:12], 
+              start = c(2020,1), 
+              frequency = 12)
+loess_pred <- ts(loess_trend_pred + loess_seas[1:12],
+                 start = c(2020,1),
+                 frequency = 12)
+plot(co2_test)
+lines(ma_pred)
+
+#plot(co2_test, 
+#     main = "Graphical Comparsion of Predictions to Testing Data",
+#     ylab = "CO2 Level")
+#line(x = ma_pred)
+```
 
 
 
