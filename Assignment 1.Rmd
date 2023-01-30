@@ -48,20 +48,29 @@ co2_train_loess <- stl(co2_train,s.window = "periodic")
 plot(co2_train_loess,
      main = "Decomposition of an Additive Time Series via Loess Smoothing")
 ```
+
+c)
 ```{r}
 # MA method
 ma_trend <- co2_train_decom$trend
-ma_seas <- co2_train_decom$seasonal
-error <- co2_train_decom$random
-
 # Loess smoothing
 loess_trend <- co2_train_loess$time.series[,"trend"]
-loess_seas <- co2_train_loess$time.series[,"seasonal"]
-loess_error <- co2_train_loess$time.series[,"remainder"]
+# Fitted Models
+lm_ma <- lm(co2_train ~ ma_trend)
+lm_loess <- lm(co2_train ~ loess_trend)
+summary(lm_ma)
+summary(lm_loess)
 ```
 
+i) Fitted model using MA method: 
+$$\hat{X_t} = -0.5817 + 1.0016*m_t$$
 
+Fitted model using loess smoothing method:
+$$\hat{X_t} = 0.3878 + 0.9989*m_t$$
 
+ii) The trend component is significant at 95% confidence level under both method. 
+
+iii) I think the trend component is a good predictor of CO2 levels for two reasons: first, as we can see from the trend component plot in part b) that the trend is linear over the entire time range of the time series data; second, from the output of the linear models we observe that $R^2 > 0.99$f ro both models. This indicates that majority of the variation within the time series is explained by the trend component. 
 
 
 
