@@ -1,0 +1,39 @@
+---
+title: 'STAT 443: Assignment 1'
+author: 'Wenxuan Zan (61336194)'
+date: "2 Februray, 2022"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+#if you do not have the package, type install.packages("name_of_the_package")
+library(tidyverse)
+library(knitr)
+library(tseries)
+library(zoo)
+```
+
+### Question 1
+
+a)
+```{r}
+co2 <- read.csv("co2_mm_gl.csv", header = TRUE, skip = 55)
+co2_ts <- ts(co2[,4], start = c(1979,1),frequency = 12)
+plot(co2_ts,
+     main = "Monthly Means of Globally Averaged CO2 Level",
+     ylab = "CO2 level")
+```
+
+i) The above time series have a clear upward trend such that the monthly means of globally averaged CO2 level is increasing every year despite some variations.
+
+ii) 
+
+
+
+
+
+
+
