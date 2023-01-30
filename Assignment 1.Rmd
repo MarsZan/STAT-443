@@ -25,11 +25,41 @@ co2_ts <- ts(co2[,4], start = c(1979,1),frequency = 12)
 plot(co2_ts,
      main = "Monthly Means of Globally Averaged CO2 Level",
      ylab = "CO2 level")
+plot(window(co2_ts, start = c(1985,1),end = c(1986,1)),
+     main = "CO2 Level Variation Within 12 Months",
+     ylab = "CO2 level")
 ```
 
-i) The above time series have a clear upward trend such that the monthly means of globally averaged CO2 level is increasing every year despite some variations.
+i) The above time series have a clear **upward trend** such that the monthly means of globally averaged CO2 level is increasing every year despite some variations.
 
-ii) 
+ii) There appears to be **seasonal variations** in the monthly CO2 level as when we restrict the plot to display the average CO2 level over a 12-month period, we can clear see the CO2 level is high around March and December, low around June.**An additive model is more suitable** as we can see the seasonal effect remains constant over time and the error is also constant over time, therefore an additive model would be more appropriate than a multiplicative model. 
+
+iii) **No**, the series have a clear upward increasing trend therefore it is not stationary. 
+
+b)
+```{r}
+co2_train <- window(co2_ts,start = c(1979,1),end = c(2019,12),frequency = 12)
+co2_test <- window(co2_ts, start = c(2020,1), end = c(2022,10), frequency = 12)
+
+co2_train_decom <- decompose(co2_train, type = "additive")
+plot(co2_train_decom)
+
+co2_train_loess <- stl(co2_train,s.window = "periodic")
+plot(co2_train_loess,
+     main = "Decomposition of an Additive Time Series via Loess Smoothing")
+```
+```{r}
+# MA method
+ma_trend <- co2_train_decom$trend
+ma_seas <- co2_train_decom$seasonal
+error <- co2_train_decom$random
+
+# Loess smoothing
+loess_trend <- co2_train_loess$time.series[,"trend"]
+loess_seas <- co2_train_loess$time.series[,"seasonal"]
+loess_error <- co2_train_loess$time.series[,"remainder"]
+```
+
 
 
 
