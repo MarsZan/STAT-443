@@ -94,22 +94,32 @@ seasonals <- tibble(ma_sea_hat = ma_seas,
   summarise(shat_ma = mean(ma_sea_hat),
             shat_loess = mean(loess_sea_hat)) 
 
-
-ma_pred <- ts(ma_trend_pred + ma_seas[1:12], 
+ma_pred <- ts(ma_trend_pred + seasonals$shat_ma, 
               start = c(2020,1), 
               frequency = 12)
-loess_pred <- ts(loess_trend_pred + loess_seas[1:12],
+loess_pred <- ts(loess_trend_pred + seasonals$shat_loess,
                  start = c(2020,1),
                  frequency = 12)
-plot(co2_test)
-lines(ma_pred)
-
-#plot(co2_test, 
-#     main = "Graphical Comparsion of Predictions to Testing Data",
-#     ylab = "CO2 Level")
-#line(x = ma_pred)
+plot(co2_test, ylim = c(min(co2_test,ma_pred,loess_pred), max(co2_test,ma_pred,loess_pred)))
+lines(ma_pred,col = "red")
+lines(loess_pred, col = "blue")
+legend(2020,
+       418,
+       legend = c("Test data", "MA Prediction", "Loess Prediction"),
+       lty = c("solid","solid","solid"),
+       col = c("black", "red","blue"))
+# MSPE
+MSPE <- tibble(ma_pred = ma_pred,
+               loess_pred = loess_pred,
+               observed = co2_test) %>%
+  mutate(sqr_diff_ma = (observed - ma_pred)^2,
+         sqr_diff_loess = (observed - loess_pred)^2) %>%
+  summarise(mspe_ma = mean(sqr_diff_ma),
+            mspe_loess = mean(sqr_diff_loess))
+MSPE
 ```
 
+Looking at the above table, the loess smoothing method result in lower MSPE on the test data. Therefore I would recommend to use the prediction model from the loess smoothing decomposition.
 
 
 
