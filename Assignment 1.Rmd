@@ -14,6 +14,7 @@ library(tidyverse)
 library(knitr)
 library(tseries)
 library(zoo)
+library(readr)
 ```
 
 ### Question 1
@@ -120,6 +121,55 @@ MSPE
 ```
 
 Looking at the above table, the loess smoothing method result in lower MSPE on the test data. Therefore I would recommend to use the prediction model from the loess smoothing decomposition.
+
+### Question 2
+
+a) 
+```{r}
+gdp <- read_csv("CanandaGDP-2.csv",
+                skip = 1,
+                col_names = c("Time", "GDP"),
+                show_col_types = FALSE)
+gdp_ts <- ts(gdp[,2],start = c(1997,1), end = c(2019,12), frequency = 12)
+plot(gdp_ts, main = "Canada Monthly Adjusted GDP Over Time")
+```
+
+This time series is likely to be non-stationary because the present of a clear 
+upward trend. 
+
+b) 
+```{r}
+n = length(gdp$GDP)
+seq_log_growth <- ts(log((gdp$GDP[-1])/(gdp$GDP[-n])),
+                     start = c(1997,2),
+                     end = c(2009,11),
+                     frequency = 12)
+plot(seq_log_growth,
+     ylab = "Sequential Log-growth Rate",
+     main = "Sequential Log-growth Rate of GDP Over Time")
+
+year_over_year_log_growth <- ts(log((gdp$GDP[-c(1:12)])/(gdp$GDP[-c((n-11):n)])),
+                                start = c(1998,1),
+                                end = c(2008,12),
+                                frequency = 12)
+
+plot(year_over_year_log_growth,
+     ylab = "Year-over-year Log-growth Rate",
+     main = "Year-over-year Log-growth Rate of GDP Over Time")
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
