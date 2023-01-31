@@ -172,8 +172,37 @@ i) In the correlogram for sequential log-growth series, we observe the auto-corr
 
 ii) In the correlogram for year-over-year log-growth series, we observe that the auto-correlation decays slowly with lag. All of the auto-correlations are positive and many exceed the $\pm 2/\sqrt{n}$ bound. This suggests that there is strong positive temporal dependence or a upward trend present in the series and the series is likely non-stationary. 
 
+### Question 3
+
+```{r}
+m = 5000
+n = 1000
+rhos <- c(rep(0,m))
+for (i in 1:m) {
+  sim_ts <- ts(rnorm(n))
+  sim_ts_acf <- acf(sim_ts, lag.max = 1, plot = FALSE)
+  rhos[i] <- sim_ts_acf$acf[2]
+}
+
+x <- seq(min(rhos), max(rhos), length = n)
+f <- dnorm(x, -1/n, sqrt(1/n))
+hist(rhos, 
+     freq = FALSE,
+     xlab = "Autocorrelation coefficient", 
+     main = "Distribution of autocorrelation at lag 1")
+lines(density(rhos), col = "red",lwd = 2)
+lines(x, f, col = "blue", lwd = 2)
+legend("topright", 
+       c("Histogram", "Density", "Normal"), 
+       box.lty = 0,
+       lty = 1, 
+       col = c("black", "red", "blue"), 
+       lwd = c(1, 2, 2))
 
 
+```
+
+Yes, the empirical sampling distribution and the asymptotic normal density agrees. As we can see from the above plot, the empirical sampling density (red line) is very close to the theoretical value (blue line). 
 
 
 
