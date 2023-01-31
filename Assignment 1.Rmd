@@ -152,15 +152,25 @@ year_over_year_log_growth <- ts(log((gdp$GDP[-c(1:12)])/(gdp$GDP[-c((n-11):n)]))
                                 start = c(1998,1),
                                 end = c(2008,12),
                                 frequency = 12)
-
 plot(year_over_year_log_growth,
      ylab = "Year-over-year Log-growth Rate",
      main = "Year-over-year Log-growth Rate of GDP Over Time")
 
 ```
 
+i) Looking at the above plots of log-growth rate series, the sequential log-growth rate series appear to be stationary because there is no apparent trend and the mean of log-growth rate appears to be constant. Whereas the year-over-year log-growth rate series appear to be non-stationary because the presence of a downward trend in log-growth rate over time. 
 
+ii) The sequential log-growth rate definition is preferable, this is because the sequential log-growth transformation results in a new time series that is stationary. 
 
+c)
+```{r}
+acf(seq_log_growth,main = "ACF for Sequential log-growth series")
+acf(year_over_year_log_growth, main = "ACF for Year-over-year log-growth series")
+```
+
+i) In the correlogram for sequential log-growth series, we observe the auto-correlation decays rapidly with lag and approaches toward 0, and most of the auto-correlations fall within the $\pm 2/\sqrt{n}$ bound. This suggests that there is likely no trend present in the series and the series is stationary. 
+
+ii) In the correlogram for year-over-year log-growth series, we observe that the auto-correlation decays slowly with lag. All of the auto-correlations are positive and many exceed the $\pm 2/\sqrt{n}$ bound. This suggests that there is strong positive temporal dependence or a upward trend present in the series and the series is likely non-stationary. 
 
 
 
