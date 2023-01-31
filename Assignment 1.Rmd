@@ -163,6 +163,7 @@ i) Looking at the above plots of log-growth rate series, the sequential log-grow
 ii) The sequential log-growth rate definition is preferable, this is because the sequential log-growth transformation results in a new time series that is stationary. 
 
 c)
+
 ```{r}
 acf(seq_log_growth,main = "ACF for Sequential log-growth series")
 acf(year_over_year_log_growth, main = "ACF for Year-over-year log-growth series")
