@@ -73,7 +73,7 @@ We observe the acf is decaying with lag and is approaching 0, therefore the time
 
 c)
 
-part a) and b) look similar, this is because the coefficient in both models are the inverse of each other. 
+The acf in part a) and b) look very similar, this is because the coefficient in both models are the inverse of each other. 
 
 ### Question 3
 
@@ -136,7 +136,7 @@ acf(q3d_sim_ts_3,lag.max = 999, main = "acf for alpha = 0.9")
 acf(q3d_sim_ts_4,lag.max = 999,  main = "acf for alpha = 0.99")
 ```
 
-When $\alpha \rightarrow 1$, we observe that the decay of autocorrelation coefficients become more and more slowly. The time series data exhibit a stronger and stronger positive temporal correlation in the data. The time series become more non-stationary. 
+When the alpha changes sign such that $\alpha \rightarrow 1$, we observe that the decay of autocorrelation coefficients become more and more slowly. The time series data exhibit a stronger and stronger positive temporal correlation in the data. The time series become more non-stationary. 
 
 ```{r}
 q3d_sim_ts_5 = ts(arima.sim(n = 1000, list(ar = c(0.5), sd = 0.1)))
