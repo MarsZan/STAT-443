@@ -189,16 +189,17 @@ x <- seq(min(rhos), max(rhos), length = n)
 f <- dnorm(x, -1/n, sqrt(1/n))
 hist(rhos, 
      freq = FALSE,
+     ylim = c(0,13),
      xlab = "Autocorrelation coefficient", 
      main = "Distribution of autocorrelation at lag 1")
 lines(density(rhos), col = "red",lwd = 2)
 lines(x, f, col = "blue", lwd = 2)
 legend("topright", 
-       c("Histogram", "Density", "Normal"), 
+       c("Density", "Normal"), 
        box.lty = 0,
        lty = 1, 
-       col = c("black", "red", "blue"), 
-       lwd = c(1, 2, 2))
+       col = c("red", "blue"), 
+       lwd = c(2, 2))
 
 
 ```
