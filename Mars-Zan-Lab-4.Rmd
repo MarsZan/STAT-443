@@ -16,3 +16,76 @@ library(tseries)
 library(zoo)
 library(readr)
 ```
+
+### Question 1
+
+If the long-run expectation of the process that generated the time series data does not change over time, then this time series is stationary. 
+
+
+### Question 2 
+
+```{r}
+data <- read.csv("lab4data.csv", header = TRUE)
+data_ts <- ts(data$x, start = c(1), frequency = 1)
+plot(data_ts,
+     ylab = "x value",
+     main = "Time Series Plot")
+```
+
+Looking at the above plot, the expectation changes over time, therefore this series does not appear to be stationary. 
+
+### Question 3
+```{r}
+y = diff(data$x, lag = 1, differences = 1)
+y_ts = ts(y,frequency = 1)
+plot(y_ts,
+     ylab = "y value",
+     main = "Time Series Plot of Lag 1 Differences")
+acf(y_ts,
+    main = "ACF plot of Lag 1 Time Series")
+```
+
+Looking at the above plot, there is no observable trend in the time series. The variance of the seasonal variation of the resulting time series becomes larger. The time series exhibits strong negative temporal dependency as the ACF plot indicates, therefore it is still not stationary. 
+
+### Question 4
+```{r}
+s = 5
+y_delta_s = diff(y, lag = s, difference = 1)
+y_delta_ts = ts(y_delta_s,frequency = 1)
+plot(y_delta_ts,
+     ylab = "y value",
+     main = "Time Series Plot of Lag s Differences")
+acf(y_delta_ts,
+    main = "ACF plot of Lag s Time Series")
+
+```
+
+Using $s = 5$, we observe that the acf plot of the time series now resembles a white noise process. 
+
+### Question 5
+A possible model is $SARIMA(0,1,0)\times(0,1,0)_5$.
+
+### Question 6
+a) $W_t = Y_t - Y_{t-s} = (X_t - X_{t-1}) - (X_{t-s} - X_{t-s-1})$
+
+$\Rightarrow W_t =X_t - X_{t-1}- X_{t-s} + X_{t-s-1}$
+
+b) $Y_t = X_t - X_{t-1}=X_t-BX_t =(1-B)X_t$
+
+c) $W_t =X_t - X_{t-1}- X_{t-s} + X_{t-s-1} = X_t-BX_t-B^sX_t + B^{t-s-1}X_t$
+
+$\Rightarrow W_t = (1-B-B^s+B^{t-s-1})X_t$
+
+
+
+
+
+
+
+
+
+
+
+
+
+
