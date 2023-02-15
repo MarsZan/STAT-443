@@ -19,10 +19,20 @@ library(zoo)
 ```{r}
 set.seed(443)
 var = 0.8
+h = 0:15
+A1 = 45/13
+d1 = 3/5
+A2 = -32/13
+d2 = 1/2
+rho_h <- A1 * d1^h + A2 * d2^h 
 sim_data = arima.sim(n = 1000, 
                      list(ar = c(11/10, -3/10)),
                      sd = sqrt(var))
 acf(sim_data,lag.max = 15,main = "Sample ACF for simulated data")
+lines(x = h,y = rho_h, col = "red")
+legend("topright", 
+       fill = c("black","red"),
+       legend = c("Simulated acf value","Theoretical acf value"))
 ```
 
 
