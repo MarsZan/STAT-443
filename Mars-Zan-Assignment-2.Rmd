@@ -1,0 +1,31 @@
+---
+title: 'STAT 443: Assignment 2'
+author: 'Wenxuan Zan (61336194)'
+date: "15 Feb, 2023"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(knitr)
+library(tseries)
+library(zoo)
+```
+
+### Question 1
+```{r}
+set.seed(443)
+var = 0.8
+sim_data = arima.sim(n = 1000, 
+                     list(ar = c(11/10, -3/10)),
+                     sd = sqrt(var))
+acf(sim_data,lag.max = 15,main = "Sample ACF for simulated data")
+```
+
+
+
+
+
