@@ -53,6 +53,19 @@ confint(model)
 
 The 95% CI for alpha is $[0.415, 0.754]$ and the 95% CI for $\mu$ is $[-2.510,-1.408]$
 
+### Question 4
+```{r}
+tsdiag(model)
+```
+
+i) Most of the residuals are within the $\pm 3$ bound.
+
+ii) Most acf of residuals are within the $\pm 2/\sqrt{n}$ bound.
+
+iii) p-values are non-significant for lag smaller than 5, and appears to be close to significant level for lag greater than 5. 
+
+iv) Overall, the model seems to fit the data relatively well. 
+
 
 
 
