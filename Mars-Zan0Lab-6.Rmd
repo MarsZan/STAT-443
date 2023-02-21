@@ -14,3 +14,47 @@ library(knitr)
 library(tseries)
 library(zoo)
 ```
+
+### Question 1
+```{r}
+data <- read.csv("TempPG.csv",header = TRUE)
+annual_ts <- ts(data$Annual, start = c(1919), end = c(2008))
+plot(annual_ts,
+     ylab = "Annual Minimum Temperatures",
+     main = "Annual Minimum Temperature at Prince George 1919-2008")
+acf(annual_ts,
+    main = "Correlogram for Annual Minimum Temperature Time Series")
+pacf(annual_ts,
+     main = "Partial-autocorrelation Plot")
+```
+
+i) Looking at the plot titled "Annual Minimum Temperature at Prince George 1919 to 2008", we can see a clear upward trend such that the annual minimum temperature at Prince George from 1919 to 2008 is increasing. Therefore this time series is likely to be non-stationary. 
+
+ii) Looking at the acf plot we observed a slow exponential decay of acf values. This pattern indicates the existence of positive temporal dependence within the data.This pattern is characteristic of a AR model.
+
+iii) Looking at the pacf plot, a sensible cut-off is at lag 1 which suggests a AR(1) model, but the pacf value also spikes at lag 5, and 13, so perhaps a ARMA model is more suitable for the data.
+
+iv) I would suggest a ARMA(1,0) model for the data.
+
+### Question 2
+```{r}
+model <- arima(annual_ts, order = c(1,0,0), include.mean = TRUE)
+model
+```
+
+The fitted model is: 
+
+$$X_t + 1.9591 = 0.5843(X_{t-1} + 1.9591) + Z_t;~~~~Z_t \sim WN(0,1.265)$$
+
+### Question 3
+```{r}
+confint(model)
+```
+
+The 95% CI for alpha is $[0.415, 0.754]$ and the 95% CI for $\mu$ is $[-2.510,-1.408]$
+
+
+
+
+
+
