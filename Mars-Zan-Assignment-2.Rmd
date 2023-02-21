@@ -35,6 +35,7 @@ legend("topright",
        legend = c("Simulated acf value","Theoretical acf value"))
 ```
 
+Looking at the above plot, the sample acf from the simulated data is fairly close to the theoretical acf values at least for lag smaller than 5
 
 
 
