@@ -65,6 +65,15 @@ tsdiag(arimamodel)
 
 Most of the standardized residuals fall between the $\pm 2$ range with a few exceeding this range. All acf values fall between the $\pm 2/\sqrt{n}$ range except for lag 0 which is expected. The Ljung-Box statistics are not significant for lag smaller than 9, and are significant for lag 9 and 10. Overall, the model fit is reasonable. 
 
+### Question 6
+```{r}
+q6_result <- tibble(Model = c("AR(1)", "ARIMA(0,1,1) "),
+                    AIC = c(round(ar1model$aic,2),round(arimamodel$aic,2)))
+kable(q6_result, caption = "AIC for Competing Models")
+```
+
+Looking at the above result, the ARIMA(0,1,1) has a smaller AIC compared to AR(1) model, therefore the ARIMA(0,1,1) model is prefered. 
+
 
 
 
