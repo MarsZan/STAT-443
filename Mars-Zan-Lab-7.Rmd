@@ -25,7 +25,38 @@ ar1model
 
 The fitted model is 
 $$X_t - \hat\mu = 0.5843(X_{t-1}-\hat\mu)+Z_t$$
-where $Z_t \sim WN(0,1.265)$
+where $\hat\mu = -1.9591$ and $Z_t \sim WN(0,1.265)$
+
+### Question 2
+```{r}
+acf(annual_ts,
+    main = "Correlogram for Annual Minimum Temperature Time Series")
+```
+
+We would expect acf values for an AR(1) process to decay exponentially, but the current acf values for the temperature data first show a exponential decay until lag 5 and has acf values exceeds the significant cut-off even at large lags. 
+
+### Question 3
+```{r}
+diffed_data <- diff(annual_ts, lag = 1, difference = 1)
+plot(diffed_data,
+     ylab = "Annual Minimum Temperatures",
+     main = "Differenced Annual Minimum Temperature")
+acf(diffed_data,
+    main = "Correlogram for Differenced Annual Minimum Temperature")
+pacf(diffed_data,
+     main = "Partial-autocorrelation Plot")
+```
+
+The series of lag 1 difference now appears to be a MA(1) process as the acf plot shows a clear cut-off at lag 1. 
+
+### Question 4
+```{r}
+arimamodel <- arima(annual_ts, order = c(0,1,1))
+arimamodel
+```
+
+The fitted model is $$W_t = -0.7504Z_{t-1} + Z_t$$
+where $W_t = X_t - X_{t-1}$ and $Z_t \sim WN(0,1.143)$
 
 
 
