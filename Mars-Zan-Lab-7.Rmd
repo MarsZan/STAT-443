@@ -14,3 +14,32 @@ library(knitr)
 library(tseries)
 library(zoo)
 ```
+
+### Question 1
+```{r}
+data <- read.csv("lab7data.csv",header = TRUE)
+annual_ts <- ts(data$Annual, start = c(1919), end = c(2008))
+ar1model <- arima(annual_ts, order = c(1,0,0),include.mean = TRUE)
+ar1model
+```
+
+The fitted model is 
+$$X_t - \hat\mu = 0.5843(X_{t-1}-\hat\mu)+Z_t$$
+where $Z_t \sim WN(0,1.265)$
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
