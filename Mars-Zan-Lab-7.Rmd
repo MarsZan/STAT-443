@@ -58,7 +58,12 @@ arimamodel
 The fitted model is $$W_t = -0.7504Z_{t-1} + Z_t$$
 where $W_t = X_t - X_{t-1}$ and $Z_t \sim WN(0,1.143)$
 
+### Question 5
+```{r}
+tsdiag(arimamodel)
+```
 
+Most of the standardized residuals fall between the $\pm 2$ range with a few exceeding this range. All acf values fall between the $\pm 2/\sqrt{n}$ range except for lag 0 which is expected. The Ljung-Box statistics are not significant for lag smaller than 9, and are significant for lag 9 and 10. Overall, the model fit is reasonable. 
 
 
 
