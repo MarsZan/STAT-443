@@ -14,3 +14,37 @@ library(knitr)
 library(tseries)
 library(zoo)
 ```
+
+### Question 1
+```{r}
+data <- read.csv("souvenir.txt", header = FALSE)
+colnames(data) <- c("Monthly Sales")
+sales_ts <- ts(data, start = c(1987,1), frequency = 12)
+training_data <- window(sales_ts,start = c(1987,1), end = c(1993,1))
+testing_data <- window(sales_ts,start = c(1987,2), end = c(1993,12))
+plot(sales_ts,
+     ylab = "Monthly Sales",
+     main = "Time Series Plot for Monthly Sales Data")
+acf(sales_ts,
+    main = "Sample acf Values for Monthly Sales Data")
+```
+
+Looking at the time series plot, there is clear seasonal variation and an upward trend , and the variation seems to be increasing with time. So I would suggest a multiplicative model. 
+
+### Question 2
+```{r}
+HWmodel <- HoltWinters(training_data,seasonal = "multiplicative")
+plot(HWmodel)
+HWmodel
+```
+
+The estimated parameter values from the model are: $$\alpha = 0.375,~\beta = 0.046,~\gamma = 0.452$$
+
+### Question 3
+```{r}
+
+```
+
+
+
+
