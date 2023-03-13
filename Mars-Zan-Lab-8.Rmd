@@ -21,7 +21,7 @@ data <- read.csv("souvenir.txt", header = FALSE)
 colnames(data) <- c("Monthly Sales")
 sales_ts <- ts(data, start = c(1987,1), frequency = 12)
 training_data <- window(sales_ts,start = c(1987,1), end = c(1993,1))
-testing_data <- window(sales_ts,start = c(1987,2), end = c(1993,12))
+testing_data <- window(sales_ts,start = c(1993,2), end = c(1993,12))
 plot(sales_ts,
      ylab = "Monthly Sales",
      main = "Time Series Plot for Monthly Sales Data")
@@ -42,9 +42,46 @@ The estimated parameter values from the model are: $$\alpha = 0.375,~\beta = 0.0
 
 ### Question 3
 ```{r}
+plot(fitted(HWmodel),
+     main = "Holt-Winters Model Decomposition")
 
 ```
 
+### Question 4
+```{r}
+predicted_sales <- predict(HWmodel,
+                           n.ahead = 11, 
+                           prediction.interval = TRUE,
+                           level = 0.95)
+plot(testing_data, type = "b", pch = 19)
+lines(predicted_sales[,"fit"], col = "red", type = "b", pch = 19)
+lines(predicted_sales[,"upr"], col = "firebrick4", lty = "dashed")
+lines(predicted_sales[,"lwr"], col = "firebrick4", lty = "dashed")
+legend(1993.2,
+       100000,
+       legend = c("Observed Value", 
+                  "Predicted Value", 
+                  "95% Prediction Interval Bound"),
+       lty = c("solid","solid","dashed"),
+       col = c("black", "red","firebrick4"))
+```
 
+All predictions are fairly close to the observed values, and all predicted values fall within the 95% prediction interval. In this regard, the forecast is reasonably accurate. 
+
+### Question 5
+```{r}
+predicted_sales[1:3,"fit"]
+```
+
+The forecast for February, March and April of 1993 are 16196.15, 26440.10, and 19170.49 
+
+### Question 6
+```{r}
+plot(log(sales_ts),
+     ylab = "Monthly Sales",
+     main = "Log Transformed Time Series")
+```
+
+It appears that a logarithm transformation could make the transformed time series follows an additive model where the seasonal component does not vary with trend.  
 
 
