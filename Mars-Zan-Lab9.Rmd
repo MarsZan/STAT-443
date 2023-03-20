@@ -15,7 +15,44 @@ library(tseries)
 library(zoo)
 ```
 
+```{r}
+data("LakeHuron")
+training <- window(LakeHuron, start = c(1875), end = c(1969))
+testing <- window(LakeHuron, start = c(1970), end = c(1972))
+```
+
 ### Question 1
+```{r}
+plot(training,
+     ylab = "Lake Level",
+     main = "Annual Level of Lake Huron From 1875 to 1969")
+acf(training)
+pacf(training)
+```
+
+Looking at the ACF plot, the values of auto-correlation decrease exponentially and the partial ACF plot shows a cut-off at lag 2. I would suggest a ARMA(2,0) model given the above observations. 
+
+### Question 2
+```{r}
+model <- arima(training, order = c(2,0,0), include.mean = TRUE)
+model
+```
+
+Fitted model: 
+$$X_t - \hat\mu = 1.0617(X_{t-1} - \hat\mu) - 0.2707(X_{t-2}-\hat\mu)+Z_t;$$
+where $\hat\mu = 579.0319$ and $~~Z_t\sim WN(0,0.484)$
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
