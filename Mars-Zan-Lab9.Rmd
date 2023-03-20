@@ -1,0 +1,21 @@
+---
+title: 'STAT 443: Lab 9'
+author: 'Wenxuan Zan (61336194)'
+date: "20 March, 2023"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(knitr)
+library(tseries)
+library(zoo)
+```
+
+### Question 1
+
+
+
