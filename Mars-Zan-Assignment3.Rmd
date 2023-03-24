@@ -58,15 +58,138 @@ kable(summary,
 
 b)
 ```{r}
-plot(density(simulation_data$V1), type = "l")
+plot(density(simulation_data$V1), 
+     col = "brown",
+     type = "l",
+     main = "Distribution of sample mean")
 lines(density(simulation_data$V2), col = "red", type = "l")
 lines(density(simulation_data$V3), col = "blue", type = "l")
+abline(v = 2.00)
+legend(2.015,
+       27.5,
+       legend = c("True mean"),
+       lty = c("solid"),
+       col = c("black"))
 ```
 
-
-
+Looking at the above plot, $\bar X$ is unbiased under all three temporal dependence scenarios, but the variance is smallest when $\alpha = -0.8$. So It appears that when the data are negatively correlated, the variance is minimized. 
 
 ### Question 2
+
+a)
+```{r}
+q2data <- read.csv("CanandaGDP.csv",header = TRUE)
+n = length(q2data$GDP)
+xt <- ts(log((q2data$GDP[-c(1:12)])/(q2data$GDP[-c((n-11):n)])),
+                                start = c(1998,1),
+                                frequency = 12)
+train <- window(xt, 
+                start = c(2010,1), 
+                end = c(2017,12))
+test <- window(xt, 
+               start = c(2018,1),
+               end = c(2019,12))
+plot(train, 
+     main = "Canadian GDP from Jan 2010 to Dec 2017",
+     ylab = "GDP")
+acf(train, lag.max = 100)
+pacf(train, lag.max = 100)
+```
+
+The year-over-year log growth rate does not appear to be stationary. The ACF shows an damped sin wave decay pattern, and pacf shows a cut-off around lag 2. This suggests an AR process. 
+
+b)
+```{r}
+result <- data.frame(p = c(rep(0:3,3)),
+                     Q = c(rep(0,3), rep(1,3), rep(2,3), rep(3,3)),
+                     AIC = c(rep(0,12)))
+for (i in 1:12) {
+  mod <- arima(train, 
+               order = c(result$p[i],0,0),
+               seasonal = list(order = c(0,0,result$Q[i])))
+  result[i,3] <- AIC(mod)
+}
+print(result[which.min(result$AIC),])
+```
+
+Since we know is this probably a process with ar(2) component, we search fit model with $p \in \{0,1,2,3\}$ and also $Q \in \{0,1,2,3\}$, and the result indicates that SARIMA(2,0,0)x(0,0,3) result in the smallest AIC. 
+
+c) 
+```{r}
+tsdiag(arima(train, 
+               order = c(2,0,0),
+               seasonal = list(order = c(0,0,3))))
+```
+
+Looking at the model fit above, all standardized residuals are within the $\pm 2$ bound
+and all acf values except for lag 0 are non-significant. Ljung-Box statistics have non-significant p-value until lag 10. The above indicates the model fit is good. 
+
+d) 
+```{r}
+model <- arima(train, 
+               order = c(2,0,0),
+               seasonal = list(order = c(0,0,3)))
+pred <- predict(model, n.ahead = 24,  prediction.interval = TRUE, level = 0.95)
+plot(test, type = "l", pch = 19, 
+     main = "Prediction Performance Plot" ,ylab = "growth rate",
+     xlim = c(2017.6, 2020.0),
+     ylim = c(0,0.05))
+lines(pred$pred, col = "red", type = "l", pch = 19)
+lines(pred$pred - 1.96*pred$se, col = "firebrick4", lty = "dashed")
+lines(pred$pred + 1.96*pred$se, col = "firebrick4", lty = "dashed")
+legend(2017.6,
+       0.05,
+       legend = c("Observed Value", 
+                  "Predicted Value", 
+                  "Prediction Interval"),
+       lty = c("solid","solid","dashed"),
+       col = c("black", "red","firebrick4"))
+```
+
+The prediction follows the observed values quite closely as we can see from above. 
+
+e)
+```{r}
+HWmodel <- HoltWinters(train,seasonal = "additive")
+predHW <- predict(HWmodel, n.ahead = 24,prediction.interval = TRUE, level = 0.95)
+plot(test, type = "l", pch = 19, 
+     main = "Prediction Performance Plot" ,ylab = "growth rate",
+     xlim = c(2016, 2020.0),
+     ylim = c(-0.02,0.07))
+lines(pred$pred, col = "red", type = "l", pch = 19)
+lines(pred$pred - 1.96*pred$se, col = "firebrick4", lty = "dashed")
+lines(pred$pred + 1.96*pred$se, col = "firebrick4", lty = "dashed")
+lines(predHW[,"fit"], col = "blue", type = "l", pch = 19)
+lines(predHW[,"upr"], col = "blue", lty = "dashed")
+lines(predHW[,"lwr"], col = "blue", lty = "dashed")
+legend(2016,
+       0.06,
+       legend = c("Observed Value", 
+                  "SARIMA prediction", 
+                  "SARIMA Interval",
+                  "HW prediction",
+                  "HW Interval"),
+       lty = c("solid","solid","dashed","solid","dashed"),
+       col = c("black", "red","firebrick4","blue","blue"))
+```
+
+The HoltWinter prediction and Box-Jenkins' prediction have similar values, but HoltWinter yields a wider prediction interval. 
+
+f)
+```{r}
+mspeBox <- mean((test - pred$pred)^2)
+mspeHW <- mean((test - predHW[,"fit"])^2)
+print(mspeBox)
+print(mspeHW)
+```
+
+I would recommend the Box-Jenkins' method for 2 reasons: 
+
+i) Box-Jenkins' method yield a narrow prediction interval as shown in part e)
+
+ii) Box-Jenkins' method has a smaller MSPE as calculated above. 
+
+The HoltWinter's method is easier to implement, but the Box-Jenkins' method allows for more freedom to tailor your model to the data at hand as we have done in the previous parts. 
 
 ### Question 3
 
