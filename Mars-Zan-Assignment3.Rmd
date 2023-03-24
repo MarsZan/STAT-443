@@ -9,10 +9,172 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-#if you do not have the package, type install.packages("name_of_the_package")
-library(tidyverse)
 library(knitr)
 library(tseries)
 library(zoo)
-library(readr)
 ```
+
+### Question 1
+```{r}
+set.seed(61336194)
+mu = 2
+alpha = c(-0.8,0,0.8)
+sigma2_alpha0 = 0.25/(1-0.8^2)
+sigma2 = 0.25
+m = 5000
+n = 500 
+
+simulation_data <- as.data.frame(matrix(data = c(rep(0,3*m)),
+                                   nrow = m,
+                                   ncol = 3))
+for (i in 1:m) {
+  x1 = arima.sim(n = 500, 
+                list(ar = c(alpha[1])),
+                sd = sqrt(sigma2)) + mu
+  simulation_data[i,1] = mean(x1)
+  
+  x2 = ts(rnorm(500,0,sqrt(sigma2_alpha0))) + mu
+  simulation_data[i,2] = mean(x2)
+  
+  x3 = arima.sim(n = 500, 
+                list(ar = c(alpha[3])),
+                sd = sqrt(sigma2)) + mu
+  simulation_data[i,3] = mean(x3)
+}
+```
+
+a)
+```{r}
+summary <- data.frame(alpha = c("-0.8","0","0.8"),
+                      emprical_mean = c(0,0,0),
+                      sd = c(0,0,0))
+for (i in 1:3) {
+  summary[i,2] = round(mean(simulation_data[,i]),3)
+  summary[i,3] = round(sd(simulation_data[,i]),3)
+}
+kable(summary,
+      caption = "Summary Result for AR(1) With Various Alpha")
+```
+
+b)
+```{r}
+plot(density(simulation_data$V1), type = "l")
+lines(density(simulation_data$V2), col = "red", type = "l")
+lines(density(simulation_data$V3), col = "blue", type = "l")
+```
+
+
+
+
+### Question 2
+
+### Question 3
+
+a)
+```{r}
+q3data <- read.csv("co2_mm_gl.csv", header = TRUE, skip = 55)
+co2ts <- ts(q3data[,4], start = c(1979,1), frequency = 12)
+training <- window(co2ts,start = c(1979,1),end = c(2019,12),frequency=12)
+testing <- window(co2ts,start = c(2020,1),end = c(2022,10),frequency=12)
+```
+
+b) 
+```{r}
+par(mfrow = c(2,2))
+s=12
+y_delta_s = diff(training, lag = s, difference = 1) 
+plot(y_delta_s,
+     ylab = "CO2 level",
+     main = "Time Series Plot of Lag 12 Difference")
+acf(y_delta_s)
+
+#
+w_t = diff(y_delta_s, lag = 1, difference = 1) 
+plot(w_t,
+     ylab = "CO2 level",
+     main = "Time Series Plot of Lag 1 Difference")
+acf(w_t, lag.max = 100)
+```
+
+i) Using $s = 12$, the time series plot indicates an upward trend, and is now void of seasonal variation. The ACF plot has a slow exponential decay which reflects the positive temporal dependence observed in the differenced series. 
+
+ii) Looking at the time series plot of lag 12 difference, the time series stil 
+possesses a upward trend. Therefore to remove the trend component, we difference the time series again at lag 1. After taking lag 1 difference, the new time series plot resembles a WN process, and the correlogram has a significant value at lag 1. 
+
+iii) I would choose $$d = 1, ~D = 1, ~s = 12$$
+
+iv) I would choose $$ p = 0, ~q = 0, ~P = 0, ~Q = 1$$ since there is a significant auto-correlation value at lag 1 after removing trend. 
+
+v) 
+```{r}
+p = 0
+P = 0
+q = c(0:5)
+Q = c(0:5)
+d = 1
+D = 1
+s = 12
+sequence = c(rep(0,6),rep(1,6),rep(2,6),rep(3,6),rep(4,6),rep(5,6))
+mods <- data.frame(p = rep(0,36),
+               d = rep(1,36),
+               q = sequence,
+               P = rep(0,36),
+               D = rep(1,36),
+               Q = rep(0:5,6),
+               AIC = rep(0,36))
+for (i in 1:36) {
+  q = mods$q[i]
+  Q = mods$Q[i]
+  mod <- arima(training, 
+               order=c(p, d, q), 
+               seasonal=list(order=c(P, D, Q),period=s))
+  mods$AIC[i] <- mod$aic
+}
+print(mods[which.min(mods$AIC),])
+```
+
+By compute AIC for all combinations of $q \in \{0,...,5\}$ and $Q \in \{0,...,5\}$, It appears the $$SARIMA(0,1,3)\times(0,1,1)_{12}$$ has the lowest AIC, $AIC = -684.06$.
+
+c) 
+```{r}
+model <- arima(training, 
+               order = c(0,1,3), 
+               seasonal = list(order = c(0,1,1),periods = 12))
+print(model)
+```
+
+d)
+```{r}
+tsdiag(model)
+```
+
+There is one standardized residual at the year 1980 fall outside of the $\pm2$ range, all other standardized residuals appeared normal. All acf values are non-significant except for at lag 0 which is expected. Ljung-Box statistics are not significant for the first 10 lags. All of the above suggests the model fit is good. 
+
+e) 
+```{r}
+pred <- predict(model,n.ahead = 34, prediction.interval = TRUE, level = 0.95)
+plot(testing, type = "l", pch = 19, main = "Prediction Performance Plot" ,ylab = "CO2 level")
+lines(pred$pred, col = "red", type = "l", pch = 19)
+lines(pred$pred - 1.96*pred$se, col = "firebrick4", lty = "dashed")
+lines(pred$pred + 1.96*pred$se, col = "firebrick4", lty = "dashed")
+legend(2020.0,
+       418.5,
+       legend = c("Observed Value", 
+                  "Predicted Value", 
+                  "Prediction Interval"),
+       lty = c("solid","solid","dashed"),
+       col = c("black", "red","firebrick4"))
+```
+
+Looking at the above plot, we can see that the predicted values fall very close to the observed co2 level which suggest the forcasting procedure has performed relatively well. 
+
+
+
+
+
+
+
+
+
+
+
