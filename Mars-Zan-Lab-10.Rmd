@@ -14,3 +14,114 @@ library(knitr)
 library(tseries)
 library(zoo)
 ```
+### Question 1
+a) 
+```{r}
+omega <- seq(0, pi, length=100)
+y <- dunif(omega, min = 0, max = pi)
+plot(omega, y, 
+     type = 'l',
+     main = "True Spectrum Density of WN process",
+     ylab = "Spectral Density",
+     xlab = "Omega")
+```
+
+b)
+```{r}
+n = 100
+WN_data <- ts(rnorm(n,0,1))
+spec.pgram(WN_data, log = "no")
+```
+
+c)
+```{r}
+n = 1000
+WN_data <- ts(rnorm(n,0,1))
+spec.pgram(WN_data, log = "no")
+```
+
+d)
+```{r}
+n = 10000
+WN_data <- ts(rnorm(n,0,1))
+spec.pgram(WN_data, log = "no")
+n = 100000
+WN_data <- ts(rnorm(n,0,1))
+spec.pgram(WN_data, log = "no")
+```
+
+### Question 2
+a)
+```{r}
+f_omega <- function(omega,beta = 0.9,simga = 1) {
+  f_star = (1/pi)*(1 + (2*beta*cos(omega))/(1+beta^2))
+  f = (1+beta^2)*simga^2*f_star
+  return(f)
+}
+curve(f_omega,
+      from = 0,
+      to = pi,
+      main = "True Spectrum Density of MA(1)",
+      ylab = "Spectral Density",
+      xlab = "Omega")
+```
+
+b)
+```{r}
+ma <- arima.sim(n = 100, model = list(ma = c(0.9)), sd = sqrt(1))
+spec.pgram(ma, log = "no")
+```
+
+```{r}
+ma <- arima.sim(n = 1000, model = list(ma = c(0.9)), sd = sqrt(1))
+spec.pgram(ma, log = "no")
+```
+
+d)
+```{r}
+ma <- arima.sim(n = 100, model = list(ma = c(0.9)), sd = sqrt(1))
+spec.pgram(ma, log = "no")
+ma <- arima.sim(n = 1000, model = list(ma = c(0.9)), sd = sqrt(1))
+spec.pgram(ma, log = "no")
+```
+
+### Question 3
+a)
+```{r}
+f_omega <- function(omega) {
+  f = 1/(pi*(1 + 1.6*cos(omega) + 0.8^2))
+  return(f)
+}
+curve(f_omega,
+      from = 0,
+      to = pi,
+      main = "True Spectrum Density of AR(1)",
+      ylab = "Spectral Density",
+      xlab = "Omega")
+```
+
+b)
+```{r}
+ar <- arima.sim(n = 100, model = list(ar = c(-0.8)), sd = sqrt(1))
+spec.pgram(ar, log = "no")
+```
+
+c)
+```{r}
+ar <- arima.sim(n = 1000, model = list(ma = c(-0.8)), sd = sqrt(1))
+spec.pgram(ar, log = "no")
+```
+
+d)
+```{r}
+ar <- arima.sim(n = 100, model = list(ar = c(-0.8)), sd = sqrt(1))
+spec.pgram(ar, log = "no")
+ar <- arima.sim(n = 1000, model = list(ma = c(-0.8)), sd = sqrt(1))
+spec.pgram(ar, log = "no")
+```
+
+
+
+
+
+
