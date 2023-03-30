@@ -124,7 +124,7 @@ Similar to the true spectrum, higher frequency corresponds to higher spectrum, b
 
 c)
 ```{r}
-ar <- arima.sim(n = 1000, model = list(ma = c(-0.8)), sd = sqrt(1))
+ar <- arima.sim(n = 1000, model = list(ar = c(-0.8)), sd = sqrt(1))
 spec.pgram(ar, log = "no")
 ```
 
@@ -134,7 +134,7 @@ d)
 ```{r}
 ar <- arima.sim(n = 2000, model = list(ar = c(-0.8)), sd = sqrt(1))
 spec.pgram(ar, log = "no")
-ar <- arima.sim(n = 5000, model = list(ma = c(-0.8)), sd = sqrt(1))
+ar <- arima.sim(n = 5000, model = list(ar = c(-0.8)), sd = sqrt(1))
 spec.pgram(ar, log = "no")
 ```
 
