@@ -34,7 +34,7 @@ spec.pgram(WN_data, log = "no")
 abline(a = 1, b =0)
 ```
 
-The periodogram is centered around the true spectrum, this is expected as we know periodogram is an unbiased estimator of the true spectrum, but the periodogram is much more nosier than the true spectrum.
+The periodogram is centered around the true variance of 1, this is expected as we know periodogram is an unbiased estimator of the true spectrum, but the periodogram is much more nosier than the true spectrum.
 
 c)
 ```{r}
@@ -87,7 +87,7 @@ ma <- arima.sim(n = 1000, model = list(ma = c(0.9)), sd = sqrt(1))
 spec.pgram(ma, log = "no")
 ```
 
-When increasing sample size to $n = 1000$, the periodogram still approximate the shape of the true spectrum but the periodogram is still very noise. The estimation did not improve with increased sample size. 
+When increasing sample size to $n = 1000$, the periodogram approximate the shape of the true spectrum well but the periodogram is still very noise. The estimation did not improve with increased sample size. 
 
 d)
 ```{r}
@@ -97,7 +97,7 @@ ma <- arima.sim(n = 2000, model = list(ma = c(0.9)), sd = sqrt(1))
 spec.pgram(ma, log = "no")
 ```
 
-After trying different sample size, it becomes clear that the raw periodogram estimate the true spectrum without biased but the estimation does not improve with sample size such that the periodogram is still very noise with larger sample size. In this sense, the periodogram is an unbiased and non-consistent estimator of the true spectral density function.
+After trying different sample size, it becomes clear that the raw periodogram estimate the shape of the true spectrum without biased but the estimation does not improve with sample size such that the periodogram is still very noise with larger sample size. In this sense, the periodogram is an unbiased and non-consistent estimator of the true spectral density function.
 
 ### Question 3
 a)
