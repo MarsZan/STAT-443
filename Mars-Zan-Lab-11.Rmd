@@ -1,0 +1,63 @@
+---
+title: 'STAT 443: Lab 11'
+author: 'Wenxuan Zan (61336194)'
+date: "5 April, 2023"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(knitr)
+library(tseries)
+library(zoo)
+```
+
+### Question 1
+```{r}
+par(mfrow = c(2,2))
+wn04 <- arima.sim(n = 100, 
+                  model = list(),
+                  sd = sqrt(4))
+spec.pgram(wn04,log = "no",main = "no filter")
+spec.pgram(wn04,spans = c(5), log = "no",main = "m = 5")
+spec.pgram(wn04,spans = c(15), log = "no",main = "m = 15")
+spec.pgram(wn04,spans = c(7,5), log = "no",main = "m = 7, n = 5")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
