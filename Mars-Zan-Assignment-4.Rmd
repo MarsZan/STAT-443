@@ -1,0 +1,22 @@
+---
+title: 'STAT 443: Assignment 4'
+author: 'Wenxuan Zan (61336194)'
+date: "6 April, 2023"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+library(tseries)
+library(zoo)
+```
+
+### Question 3
+a)
+```{r}
+
+```
+
