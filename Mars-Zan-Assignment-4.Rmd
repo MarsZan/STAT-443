@@ -17,6 +17,104 @@ library(zoo)
 ### Question 3
 a)
 ```{r}
-
+pelt <- read.table("pelt.txt",header = FALSE)
+colnames(pelt) <- c("sales")
+pelt_ts <- ts(pelt/1000,start = c(1857),end = c(1910), frequency = 1)
+plot(pelt_ts, 
+     ylab = "Sales in Thousands",
+     main = "Annual Lynx Sales in Thousands From 1857 to 1910")
+acf(pelt_ts,
+    main = "ACF Plot for Annual Lynx Sales")
 ```
+
+- Looking at the annual sales of lynx plot, there is a clear cyclical variation to the time series where the sales experience ups and downs over time. The period for the variation seems to be around 10 years. There is no obvious trend in the data. Since there is obvious cyclical variation in the data, this time series is not stationary. 
+
+- Looking at the acf for the sales data, the acf values show a damped sin-wave pattern which suggests an AR process.
+
+b)
+```{r}
+pelt_spec <- spec.pgram(pelt_ts,log = "no", main = "Raw Periodogram for Pelt Sales Data")
+w_star <- pelt_spec$freq[which.max(pelt_spec$spec)] 
+w <- w_star*2*pi 
+wavelength <- 1/w_star
+result <- data.frame(Type = c("Dominating Frequency","Angular Frequency","Wavelength"),
+                     Estimates = round(c(w_star,w,wavelength),2))
+kable(result, caption = "Table 1. Results for Question 3 part b")
+```
+
+The periodogram is dominated by low frequency at 0.11, and the dominating angular frequency is estimated to be 0.70, the wavelength is estimated to be 9 years. 
+
+c) 
+```{r}
+# Inputs:
+#   - data: an ts object of length N
+#   - p: an integer in the range of {0,1,2,...,N/2}
+# Output:
+#   - omega_p: a Fourier Frequency at p
+FourierFrequency <- function(data,p) {
+  N <- length(data)
+  omega_p <- 2*pi*p/N
+  return(omega_p)
+}
+
+print(round(FourierFrequency(pelt_ts,8),2))
+```
+
+The Fourier frequency at p = 8 is 0.93.
+
+d) 
+```{r}
+# Y_t = a_0 + a_p*cos(w_p*t)+b_p*sin(w_p*t)+epsilon_t
+Yt = log(pelt_ts)
+N = length(Yt)
+p = seq(1:N/2)
+t = seq(1:N)
+F_crit <- qf(0.95,2,N-3)
+
+result <- rep(0,54)
+for (i in p) {
+  omega_p <- FourierFrequency(Yt,i)
+  x1 <- cos(omega_p * t)
+  x2 <- sin(omega_p * t)
+  Fstat <- summary(lm(Yt ~ x1 + x2))$fstatistic[1]
+  if (pf(Fstat,2,N-3,lower.tail = FALSE) < 0.05) {
+    result[i] = omega_p
+  }
+}
+sig_Fourier_frequency <- result[result > 0]
+print(sig_Fourier_frequency)
+```
+
+The significant Fourier frequencies are 0.6981 and 5.5851 at the 95% confidence level. 
+
+e)
+```{r}
+sig_p = sig_Fourier_frequency*N/(2*pi)
+x1 = cos(sig_Fourier_frequency[1]*t)
+x2 = sin(sig_Fourier_frequency[1]*t)
+x3 = cos(sig_Fourier_frequency[2]*t)
+x4 = sin(sig_Fourier_frequency[2]*t)
+model <- lm(Yt ~ x1+x2+x3+x4)
+print(model$coefficients)
+```
+
+The coefficients are $a_0 = 2.9243174$, $a_6 =-0.9365233$,$b_6 = 0.1493838$ and $a_{48} = b_{48} = 0$
+
+```{r}
+plot(Yt,
+     ylab = "Log Transformed Sales",
+     main = "Annual Pelt Sales")
+fitted_ts <- ts(model$fitted.values,start = c(1857),end = c(1910), frequency = 1)
+lines(as.numeric(time(fitted_ts)),fitted_ts,col = "red",lty="dashed")
+legend("bottomleft", 
+       legend = c("Observed Sales","Fitted Sales"),
+       lty = c("solid","dashed"),
+       col = c("black","red"),
+       cex = 0.6)
+```
+
+
+
+
+
 
